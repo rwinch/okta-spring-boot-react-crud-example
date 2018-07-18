@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -21,12 +20,7 @@ import java.util.*;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/**/*.{js,html,css}");
-    }
-
-    @Override
+     @Override
     protected void configure(HttpSecurity http) throws Exception {
         RequestCache requestCache = refererRequestCache();
         SavedRequestAwareAuthenticationSuccessHandler handler = new SavedRequestAwareAuthenticationSuccessHandler();
@@ -45,6 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .requestCache(requestCache)
                 .and()
             .authorizeRequests()
+                .antMatchers("/**/*.{js,html,css}").permitAll()
                 .antMatchers("/", "/api/user").permitAll()
                 .anyRequest().authenticated();/*
             .and()
